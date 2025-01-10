@@ -1,8 +1,9 @@
 const User = require('../models/user');
 const crypto = require('crypto');
+require('dotenv').config();
 
 // Secret key for encryption (ensure it's exactly 32 bytes long)
-const ENCRYPTION_KEY = crypto.createHash('sha256').update('your-secret-key').digest('hex').slice(0, 32); // SHA-256 to get a 32-byte key
+const ENCRYPTION_KEY = crypto.createHash('sha256').update(process.env.HASHING_SECRET).digest('hex').slice(0, 32); // SHA-256 to get a 32-byte key
 const IV_LENGTH = 16; // Length of initialization vector (IV) used in AES encryption
 
 /**
@@ -137,7 +138,6 @@ const rsaEncryptUser = (users, publicKey) => {
   responseString = responseString.slice(0, -1);
   responseString += "]"
   const splittedData = splitData(responseString, 210);
-  console.log(splittedData)
   const rsaSplittedData = [];
   for (i = 0; i < splittedData.length; i++) {
     rsaSplittedData.push(crypto.publicEncrypt(publicKey, Buffer.from(splittedData[i])).toString('base64'));

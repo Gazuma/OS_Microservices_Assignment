@@ -27,8 +27,7 @@ router.post('/', async (req, res) => {
   try {
    
     const encryptedData = req.body.data;
-    const privateKeyPath = path.join(__dirname, '../privateServer.pem');
-    const privateKey = await fs.readFileSync(privateKeyPath, 'utf8');
+    const privateKey = process.env.PRIVATE_SERVER;
     const decryptedData = JSON.parse(crypto.privateDecrypt(privateKey, Buffer.from(encryptedData, 'base64')).toString());
     const{error} = userSchema.validate(decryptedData);
     if (error) return res.status(400).send({ message: error.details[0].message });
